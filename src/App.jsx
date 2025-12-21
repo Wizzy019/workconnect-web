@@ -10,6 +10,7 @@ import WorkerDashboard from './pages/main/WorkerDashboard'
 import ClientDashboard from './pages/main/ClientDashboard'
 import Jobs from './pages/main/Jobs'
 import ProtectedRoute from './routes/ProtectedRoute'
+import Navbar from './components/layout/Navbar'
 
 function App() {
   return (
