@@ -11,6 +11,7 @@ import ClientDashboard from './pages/main/ClientDashboard'
 import Jobs from './pages/main/Jobs'
 import ProtectedRoute from './routes/ProtectedRoute'
 import Navbar from './components/layout/Navbar'
+import Register from './pages/auth/Register'
 
 function App() {
   return (
@@ -18,12 +19,10 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route element={<AuthLayout />} >
           <Route path='/login' element={<Login />} />
-          <Route path='/register/step-1' element={<RegisterStep1 />} />
-          <Route path='/register/step-2' element={<RegisterStep2 />}/>
-          <Route path='/register/step-3' element={<RegisterStep3 />} />
+          <Route path='/register' element={<Register/>} />
          </Route>
           <Route element={<MainLayout />} >
-            <Route path='/dashboard/worker' element={<ProtectedRoute><WorkerDashboard /></ProtectedRoute>} />
+            <Route path='/dashboard/freelancer' element={<ProtectedRoute><WorkerDashboard /></ProtectedRoute>} />
             <Route path='/dashboard/client' element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
          </Route>
         <Route path='/joblist' element={<Jobs />} />

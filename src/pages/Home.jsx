@@ -65,7 +65,7 @@ function Home() {
         gap-4 p-2 text-center'>
             <h1 className='text-4xl font-bold text-white '>Connect With Real Work. Build Real Income</h1>
             <h3 className='text-2xl font-semibold text-white'>WorkConnect links skilled people to real-time job opportunities — fast, simple, and trustworthy</h3>
-            <Link to="register/step-1" className='text-white'>
+            <Link to="/register" className='text-white'>
             <button className='bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition md:block'
           >Get Started</button></Link>
         </div>

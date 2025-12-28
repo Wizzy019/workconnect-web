@@ -1,28 +1,28 @@
-import { useState } from 'react'
-import { Link, useNavigate} from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { Link } from "react-router-dom";
 
-function RegisterStep2 (){
+function RegisterStep2 ({formData, setFormData, next}){
 
-  const { updateRegisterData } = useAuth();
+//   const { updateRegisterData } = useAuth();
 
-  const navigate = useNavigate();
+//   const navigate = useNavigate();
 
-const [role, setRole] = useState("frelancer");
-const [skill, setSkill] = useState("");
-const [country, setCountry] = useState("");
-// const [error, setError] = useState("");
+// const [role, setRole] = useState("frelancer");
+// const [skill, setSkill] = useState("");
+// const [country, setCountry] = useState("");
+// // const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+      setFormData({
+        ...formData, [e.target.value]: e.target.value,
+      });
+    };
 
      const handleSubmit = (e) => {
       e.preventDefault();
+    next()
 
-       updateRegisterData({role, skill, country});
-      // if(!result.success) {
-      //   setError(result.message);
-      //   return;
-      // }
-      navigate("/register/step-3")
-    }
+};
+
 
 
   return (
@@ -33,18 +33,18 @@ const [country, setCountry] = useState("");
        <h3 className='text-xl font-medium my-5 text-center'>Step 2 of 3</h3>
       {/* {error && <p className="text-red-500 text-sm">{error}</p>} */}
 
-      <select value={role} onChange={(e) => setRole(e.target.value)}
+      <select  onChange={handleChange}
       className="border p-2 w-full rounded">
         <option value="freelancer">Frelancer</option>
         <option value="client">Business/Client</option>
       </select>
-       <input type="skill" placeholder="Enter your Skill or area of service" value={skill} 
-       onChange={(e) => setSkill(e.target.value)}
+       <input type="skill" placeholder="Enter your Skill or area of service"
+       onChange={handleChange}
       className="border p-2 w-full rounded"
       required
       />
-       <input type="text" placeholder="Enter your country name" value={country} 
-       onChange={(e) => setCountry(e.target.value)}
+       <input type="text" placeholder="Enter your country name"
+       onChange={handleChange}
       className="border p-2 w-full rounded"
       required
       />

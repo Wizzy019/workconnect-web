@@ -1,40 +1,34 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
+const InputField = ({ label, name, type = "text", value, placeholder, onChange }) => (
+    <div className="mb-4">
+      <label className="block text-gray-700 text-sm font-bold mb-1">{label}</label>
+      <input
+        type={type}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+  );
+
 function Login() {
 
-  const { login, user } = useAuth();
+const { login, error } = useAuth();
+
   const navigate = useNavigate();
   
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-   useEffect(() => {
-    if(user){
-      if(user.role === "client") navigate("/dashboard/client", {replace: true});
-      else navigate("/dashboard/worker", {replace: true})
-    }
-  }, [user, navigate]);
-
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
   e.preventDefault();
-
-  const result = login(email, password);
-
-  if (!result.success) {
-    setError(result.message);
-    return; 
-  };
-
-  const role = result.user.role;
-  if (role === "client") {
-    navigate("/dashboard/client", { replace: true });
-  } else {
-    navigate("/dashboard/worker", { replace: true });
-  }
+  const role = await login(email, password);
+  navigate(`/dashboard/${role}`);
 };
 
 
@@ -45,21 +39,13 @@ function Login() {
             <h2 className='text-pretty text-3xl font-semibold mb-3'>Login</h2> 
 
             {error && <p className='text-red-500 text-sm'>{error}</p>}
-           <input type="email" placeholder="Email" value={email} 
-           onChange={(e) => setEmail(e.target.value)}
-            className="border p-2 w-full rounded"
-             required
-            />
-            <input type="password" placeholder="Password" value={password} 
-            onChange={(e) => setPassword(e.target.value)}
-            className="border p-2 w-full rounded"
-            required
-            />
+            <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button 
              className="bg-green-700 text-white w-full py-2 rounded"
              >Login</button> 
              <p className='text-sm text-center'>Don't have an account?{" "}
-              <Link to="/register/step-1" className='text-blue-600 underline'>Register</Link></p>
+              <Link to="/register" className='text-green-600 font-semibold'>Register</Link></p>
             </form>
   )
 }

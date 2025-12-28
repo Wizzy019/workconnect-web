@@ -1,26 +1,25 @@
 import { faArrowAltCircleLeft, faBars, faBriefcase, faDashboard, faEnvelope, faGear, faList, faTimes, faUser, faWallet } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 function Sidebar() {
 
-  const { logout, user } = useAuth();
+  const { logout } = useAuth();
   const [open, setOpen] = useState(false);
 
-  if (!user) return null;
-  const role = user.role;
-  let userRole;
+  const navigate = useNavigate();
 
-  if(role === "client"){
-    userRole = "client";
-  } else {
-    userRole = "worker";
-  }
+  const handleLogout = async () => {
+    await logout();
+     navigate("/login");
+  };
+ 
+
 
   const navItems = [
-    { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: `/dashboard/${userRole}`, },
+    { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: ``, },
     { name: "Opportunities", icon: <FontAwesomeIcon icon={faBriefcase}/> , path: "/joblist" },
     { name: "My Tasks", icon: <FontAwesomeIcon icon={faList}/>, path: "/my-tasks" },
     { name: "Wallet", icon: <FontAwesomeIcon icon={faWallet}/>, path: "/wallet" },
@@ -56,7 +55,8 @@ function Sidebar() {
       </div>
 
       <div className="mt-auto pt-4">
-        <button onClick={logout} className="flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg font-medium">
+        <button  className="flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-lg font-medium" 
+        onClick={handleLogout}>
           <FontAwesomeIcon icon={faArrowAltCircleLeft} />
           Logout
         </button>
