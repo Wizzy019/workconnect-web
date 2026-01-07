@@ -44,8 +44,8 @@ export const AuthProvider = ({ children }) => {
     password,
   });
 
-  if (error) throw error;
-  if (!data || !data.user) throw new Error("Login failed");
+  if (error) setError(error.message);
+  if (!data || !data.user) setError("Login failed");
 
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
@@ -67,19 +67,50 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-  supabase.auth.getSession().then(({ data }) => {
-    setUser(data.session?.user || null);
-    setLoading(false);
-    });
-
-    const { data: listener } = supabase.auth.onAuthStateChange(
-    (_event, session) => {
-      setUser(session?.user || null);
+  const getInitialSession = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) {
+        setUser(session.user)
+      await fetchAndSetProfile(session.user);
     }
-    );
+    setLoading(false);
+  };
 
-    return () => listener.subscription.unsubscribe();
-    }, []);
+  const fetchAndSetProfile = async (authUser) => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", authUser.id)
+        .maybeSingle(); // maybeSingle is safer than .single()
+
+      if (error) {
+        console.error("Profile Fetch Error:", error.message);
+      } else {
+        setProfile(data);
+      }
+    } catch (err) {
+      console.error("Unexpected Error:", err);
+    }
+  };
+
+  getInitialSession();
+
+  const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
+    // console.log("Auth Event:", event); // Debugging line
+    if (session?.user) {
+      setUser(session.user);
+         fetchAndSetProfile(session.user);
+    } else {
+      setUser(null);
+      setProfile(null);
+    }
+    // setLoading(false);
+  });
+
+  return () => listener.subscription.unsubscribe();
+}, []);
+
 
     return (
         <AuthContext.Provider value={{ user, profile, signUp, login, logout, error}}>

@@ -1,82 +1,42 @@
-import { Link } from "react-router-dom";
+import React from 'react';
 
 const JobCard = ({ job }) => {
-  const salaryRange = `$${job.salaryMin} - $${job.salaryMax}`;
+  const statusStyles = {
+    Open: "bg-teal-50 text-teal-700",
+    "In Progress": "bg-blue-50 text-blue-700",
+    Completed: "bg-gray-100 text-gray-700",
+  };
 
   return (
-    <div className="p-6 rounded-lg border bg-white border-gray-100 max-w-lg mx-auto">
-      <div className="flex justify-between items-start mb-2">
-        <h2 className="text-xl font-semibold text-gray-900">{job.title}</h2>
-        <button
-          className="text-gray-400 hover:text-gray-600 focus:outline-none"
-          aria-label="Bookmark job"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+    <div className="max-w-md bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex flex-col gap-4">
+      <div className="flex justify-between items-start">
+        <h3 className="text-xl font-bold text-slate-800">{job?.title || "Build a Landing Page"}</h3>
+        <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusStyles[job?.status] || statusStyles.Open}`}>
+          {job?.status || "Open"}
+        </span>
+      </div>
+
+      <div className="space-y-1">
+        <p className="text-slate-600">
+          Budget: <span className="font-medium text-slate-900">${job?.budget?.toLocaleString() || "1,200"}</span>
+        </p>
+        
+        <div className="flex items-center gap-2 text-slate-700 py-1">
+          <svg className="w-5 h-5 text-slate-500" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
           </svg>
-        </button>
-      </div>
-
-      <p className="text-gray-600 mb-4">{job.company} - {job. location}</p>
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        <span className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
-          {job.type}
-        </span>
-        <span className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
-          {job.workplace}
-        </span>
-        <span className="text-sm font-medium text-gray-700 bg-gray-100 px-3 py-1 rounded-full">
-          {job.setting}
-        </span>
-      </div>
-
-      <div className="flex justify-between items-center mt-6">
-        <div className="flex flex-col">
-          <p className="text-xl font-bold text-gray-900">{salaryRange}</p>
-          <div className="flex text-sm text-gray-500 mt-1 gap-4">
-            <span className="flex items-center">
-              {/* SVG for Clock Icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {job.timePosted}
-            </span>
-            <span className="flex items-center">
-              {/* SVG for User/Applicants Icon */}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
-              {job.applicants} applicants
-            </span>
-          </div>
+          <span className="font-semibold text-lg">{job?.talent || "Not assigned"}</span>
         </div>
-         <Link to="/register/step-1" >
-         <button className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition">
-          Apply
+        
+        <p className="text-sm text-slate-400">
+          Posted on {job?.date || "April 22, 2024"}
+        </p>
+      </div>
+
+      <div className="flex justify-end mt-2">
+        <button className="px-6 py-2 border border-slate-200 rounded-lg text-slate-700 font-medium hover:bg-slate-50 transition-colors">
+          View Job
         </button>
-         </Link>
       </div>
     </div>
   );

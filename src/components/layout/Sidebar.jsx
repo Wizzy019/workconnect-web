@@ -6,31 +6,42 @@ import { useAuth } from "../../context/AuthContext";
 
 function Sidebar() {
 
-  const { logout } = useAuth();
-  const [open, setOpen] = useState(false);
+  const { logout, profile } = useAuth();  // get profile for role
+  const role = profile?.role;            // optional chaining
 
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     await logout();
-     navigate("/login");
+    navigate("/login");
   };
- 
 
+  if (!role) return <div className="p-4">Loadin...</div>
 
-  const navItems = [
-    { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: ``, },
-    { name: "Opportunities", icon: <FontAwesomeIcon icon={faBriefcase}/> , path: "/joblist" },
-    { name: "My Tasks", icon: <FontAwesomeIcon icon={faList}/>, path: "/my-tasks" },
-    { name: "Wallet", icon: <FontAwesomeIcon icon={faWallet}/>, path: "/wallet" },
-    { name: "Messages", icon: <FontAwesomeIcon icon={faEnvelope}/>, path: "/messages" },
-    { name: "Profile", icon: <FontAwesomeIcon icon={faUser}/>, path: "/profile" },
-    { name: "Settings", icon: <FontAwesomeIcon icon={faGear}/>, path: "/settings" },
-  ];
+  // role-based nav items
+  const navItems = role === "client"
+    ? [
+        { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: `/dashboard/client` },
+        { name: "Find Talent", icon: <FontAwesomeIcon icon={faBriefcase}/>, path: "/jobs/new" },
+        { name: "My Jobs", icon: <FontAwesomeIcon icon={faList}/>, path: "/myjobs" },
+        { name: "Wallet", icon: <FontAwesomeIcon icon={faWallet}/>, path: "/wallet" },
+        { name: "Messages", icon: <FontAwesomeIcon icon={faEnvelope}/>, path: "/messages" },
+        { name: "Profile", icon: <FontAwesomeIcon icon={faUser}/>, path: "/profile" },
+        { name: "Settings", icon: <FontAwesomeIcon icon={faGear}/>, path: "/settings" },
+      ]
+    : [ // freelancer
+        { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: `/dashboard/freelancer` },
+        { name: "Opportunities", icon: <FontAwesomeIcon icon={faBriefcase}/>, path: "/joblist" },
+        { name: "My Tasks", icon: <FontAwesomeIcon icon={faList}/>, path: "/my-tasks" },
+        { name: "Wallet", icon: <FontAwesomeIcon icon={faWallet}/>, path: "/wallet" },
+        { name: "Messages", icon: <FontAwesomeIcon icon={faEnvelope}/>, path: "/messages" },
+        { name: "Profile", icon: <FontAwesomeIcon icon={faUser}/>, path: "/profile" },
+        { name: "Settings", icon: <FontAwesomeIcon icon={faGear}/>, path: "/settings" },
+      ];
 
   return (
   <>
-  
    <div className='md:hidden absolute top-0 left-0 mt-7 ml-5 '><FontAwesomeIcon icon={faBars} className='text-xl'
    onClick={() => setOpen(true)}
    /></div>
