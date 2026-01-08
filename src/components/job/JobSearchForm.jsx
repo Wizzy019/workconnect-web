@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SearchBar from '../common/SearchBar';
 
   const Dropdown = ({ label, options }) => (
     <div className="relative w-full">
@@ -16,8 +17,8 @@ import React, { useState } from 'react';
     </div>
   );
 
-const JobSearchForm = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+const JobSearchForm = ( {jobs} ) => {
+  const [filteredJobs, setFilteredJobs] = useState('');
 
  
   const locations = [
@@ -42,24 +43,21 @@ const JobSearchForm = () => {
     "$140,001 – $180,000", "$180,001 – $220,000", "$220,001+"
   ];
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Searching for jobs...');
+  const handleSearch = (query) => {
+    const filtered = jobs.filter(job => 
+      job.title.toLowerCase().includes(query.toLowerCase()) ||
+      job.description.toLowerCase().includes(query.toLowerCase())
+    );
+   setFilteredJobs(filtered);
   };
 
 
 
   return (
     <div className="p-6 rounded-lg max-w-4xl mx-auto">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSearch}>
         <div className="mb-6">
-          <input
-            type="text"
-            placeholder="Search jobs"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-3 text-lg border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-green-500"
-          />
+          <SearchBar placeholder='Serch jobs'/>
         </div>
 
         <div className="flex flex-col md:flex-row gap-4 items-end">

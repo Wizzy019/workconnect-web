@@ -10,6 +10,9 @@ import ProtectedRoute from './routes/ProtectedRoute'
 import Register from './pages/auth/Register'
 import MyJobsList from './components/job/MyJobsList'
 import PostJobForm from './components/job/PostJobForm'
+import TalentList from './components/job/talentList'
+import TalentForm from './components/job/talentForm'
+import MyTasks from './pages/main/MyTasks'
 function App() {
   return (
       <Routes>
@@ -25,6 +28,9 @@ function App() {
         <Route path='/joblist' element={<Jobs />} />
         <Route path='/myjobs' element={<ProtectedRoute><MyJobsList /></ProtectedRoute>}/>
         <Route path='/postjob' element={<PostJobForm />} />
+        <Route path='postgig' element={<TalentForm />} />
+        <Route path='/talents' element={<TalentList />} />
+        <Route path='/mytasks' element={<ProtectedRoute><MyTasks /></ProtectedRoute>} />
       </Routes>
   )
 }

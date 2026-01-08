@@ -23,7 +23,7 @@ function Sidebar() {
   const navItems = role === "client"
     ? [
         { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: `/dashboard/client` },
-        { name: "Find Talent", icon: <FontAwesomeIcon icon={faBriefcase}/>, path: "/jobs/new" },
+        { name: "Find Talent", icon: <FontAwesomeIcon icon={faBriefcase}/>, path: "/talents" },
         { name: "My Jobs", icon: <FontAwesomeIcon icon={faList}/>, path: "/myjobs" },
         { name: "Wallet", icon: <FontAwesomeIcon icon={faWallet}/>, path: "/wallet" },
         { name: "Messages", icon: <FontAwesomeIcon icon={faEnvelope}/>, path: "/messages" },
@@ -33,7 +33,7 @@ function Sidebar() {
     : [ // freelancer
         { name: "Dashboard", icon: <FontAwesomeIcon icon={faDashboard}/>, path: `/dashboard/freelancer` },
         { name: "Opportunities", icon: <FontAwesomeIcon icon={faBriefcase}/>, path: "/joblist" },
-        { name: "My Tasks", icon: <FontAwesomeIcon icon={faList}/>, path: "/my-tasks" },
+        { name: "My Tasks", icon: <FontAwesomeIcon icon={faList}/>, path: "/mytasks" },
         { name: "Wallet", icon: <FontAwesomeIcon icon={faWallet}/>, path: "/wallet" },
         { name: "Messages", icon: <FontAwesomeIcon icon={faEnvelope}/>, path: "/messages" },
         { name: "Profile", icon: <FontAwesomeIcon icon={faUser}/>, path: "/profile" },

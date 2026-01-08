@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient/supabase";
 import JobCard from "./JobCard";
+import BackButton from "../common/BackButton";
 
 
 const MyJobsList = () => {
@@ -38,6 +39,7 @@ const MyJobsList = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
+      <div><BackButton /></div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-slate-900">My Jobs</h1>
         {jobs.length > 0 && (
