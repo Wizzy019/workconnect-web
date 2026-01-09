@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient/supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faCamera, faImage } from '@fortawesome/free-solid-svg-icons';
@@ -7,9 +7,15 @@ import { useAuth } from '../../context/AuthContext';
 
 const TalentForm = () => {
   const { user, profile } = useAuth();
+
+  const profileInputRef = useRef(null);
+  const coverInputRef = useRef(null);
+
   const [loading, setLoading] = useState(false);
   const [skillInput, setSkillInput] = useState('');
   const [localError, setLocalError] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
+  const [coverImage, setCoverImagge] = useState(null);
   const [succes, setSuccces] = useState("");
   const [formData, setFormData] = useState({
     full_name: '',
@@ -48,13 +54,44 @@ const TalentForm = () => {
     }));
   };
 
+  const uploadImage = async (file, folder) => {
+  const ext = file.name.split(".").pop();
+  const filePath = `${folder}/${user.id}-${Date.now()}.${ext}`;
+
+  const { error } = await supabase.storage
+    .from("talents")
+    .upload(filePath, file);
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from("talents")
+    .getPublicUrl(filePath);
+
+  return data.publicUrl;
+};
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
+    let profileImageUrl = null;
+    let coverImageUrl = null;
+
+    if(profileImage){
+      profileImageUrl = await uploadImage(profileImage, "profile");
+    }
+
+    if(coverImage){
+      coverImageUrl = await uploadImage(coverImage, "cover")
+    }
+
     const { error } = await supabase.from('talents').insert([{
       ...formData,
       worker_id: user?.id,
+      profile_image_url: profileImageUrl,
+      cover_image_url: coverImageUrl,
       rating: 5.0,
       reviews_count: 0,
       starting_price: parseFloat(formData.starting_price)
@@ -93,14 +130,27 @@ const TalentForm = () => {
           </div>
           
           <div className="flex flex-col gap-2 w-full items-center">
-            <button type="button" className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-              <FontAwesomeIcon icon={faCamera} className="text-[#1dbf73]" />
+            <div className='flex'>
+              <button type="button" className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
+              <FontAwesomeIcon icon={faCamera} className="text-[#1dbf73]" 
+              onClick={() => profileInputRef.current?.click()}
+              />
               Upload Profile Image
             </button>
+            <input type="file" accept="image/*" ref={profileInputRef} onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
+            className='w-1/3 flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700'/>
+            </div>
+
+           <div className='flex'>
             <button type="button" className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-              <FontAwesomeIcon icon={faImage} className="text-[#1dbf73]" />
+              <FontAwesomeIcon icon={faImage} className="text-[#1dbf73]" 
+               onClick={() => coverInputRef.current?.click()}
+              />
               Upload Cover Image
             </button>
+             <input type="file" accept="image/*" ref={coverInputRef} onChange={(e) => setCoverImagge(e.target.files?.[0] || null)} 
+             className='w-1/3 flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700'/>
+            </div> 
           </div>
         </div>
 
