@@ -13,6 +13,7 @@ import PostJobForm from './components/job/PostJobForm'
 import TalentList from './components/job/talentList'
 import TalentForm from './components/job/talentForm'
 import MyTasks from './pages/main/MyTasks'
+import Profile from './pages/main/profile'
 function App() {
   return (
       <Routes>
@@ -25,6 +26,7 @@ function App() {
             <Route path='/dashboard/freelancer' element={<ProtectedRoute><WorkerDashboard /></ProtectedRoute>} />
             <Route path='/dashboard/client' element={<ProtectedRoute><ClientDashboard /></ProtectedRoute>} />
          </Route>
+         <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
         <Route path='/joblist' element={<Jobs />} />
         <Route path='/myjobs' element={<ProtectedRoute><MyJobsList /></ProtectedRoute>}/>
         <Route path='/postjob' element={<PostJobForm />} />

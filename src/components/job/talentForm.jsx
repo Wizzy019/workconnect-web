@@ -15,7 +15,7 @@ const TalentForm = () => {
   const [skillInput, setSkillInput] = useState('');
   const [localError, setLocalError] = useState("");
   const [profileImage, setProfileImage] = useState(null);
-  const [coverImage, setCoverImagge] = useState(null);
+  const [coverImage, setCoverImage] = useState(null);
   const [succes, setSuccces] = useState("");
   const [formData, setFormData] = useState({
     full_name: '',
@@ -148,7 +148,7 @@ const TalentForm = () => {
               />
               Upload Cover Image
             </button>
-             <input type="file" accept="image/*" ref={coverInputRef} onChange={(e) => setCoverImagge(e.target.files?.[0] || null)} 
+             <input type="file" accept="image/*" ref={coverInputRef} onChange={(e) => setCoverImage(e.target.files?.[0] || null)} 
              className='w-1/3 flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700'/>
             </div> 
           </div>
