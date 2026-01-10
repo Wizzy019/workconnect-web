@@ -5,8 +5,28 @@ const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [profile, setProfile] = useState(null);
-    const [error, setError] = useState(true);
+    const [error, setError] = useState(null); // Changed default to null
     const [loading, setLoading] = useState(true);
+
+    // Define this as a reusable function
+    const refreshProfile = async (userId) => {
+        const targetId = userId || user?.id;
+        if (!targetId) return;
+
+        try {
+            const { data, error } = await supabase
+                .from("profiles")
+                .select("*")
+                .eq("id", targetId)
+                .maybeSingle();
+
+            if (error) throw error;
+            setProfile(data);
+            return data;
+        } catch (err) {
+            console.error("Profile Refresh Error:", err.message);
+        }
+    };
 
     const signUp = async (formData) => {
         setError(null);
@@ -67,53 +87,33 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-  const getInitialSession = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session?.user) {
-        setUser(session.user)
-      await fetchAndSetProfile(session.user);
-    }
-    setLoading(false);
-  };
+        const getInitialSession = async () => {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session?.user) {
+                setUser(session.user);
+                await refreshProfile(session.user.id); // Use the new function
+            }
+            setLoading(false);
+        };
 
-  const fetchAndSetProfile = async (authUser) => {
-    try {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", authUser.id)
-        .maybeSingle(); // maybeSingle is safer than .single()
+        getInitialSession();
 
-      if (error) {
-        console.error("Profile Fetch Error:", error.message);
-      } else {
-        setProfile(data);
-      }
-    } catch (err) {
-      console.error("Unexpected Error:", err);
-    }
-  };
+        const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
+            if (session?.user) {
+                setUser(session.user);
+                refreshProfile(session.user.id);
+            } else {
+                setUser(null);
+                setProfile(null);
+            }
+        });
 
-  getInitialSession();
-
-  const { data: listener } = supabase.auth.onAuthStateChange(async (event, session) => {
-    // console.log("Auth Event:", event); // Debugging line
-    if (session?.user) {
-      setUser(session.user);
-         fetchAndSetProfile(session.user);
-    } else {
-      setUser(null);
-      setProfile(null);
-    }
-    // setLoading(false);
-  });
-
-  return () => listener.subscription.unsubscribe();
-}, []);
-
+        return () => listener.subscription.unsubscribe();
+    }, []);
 
     return (
-        <AuthContext.Provider value={{ user, profile, signUp, login, logout, error}}>
+        // Add refreshProfile to the context value
+        <AuthContext.Provider value={{ user, profile, signUp, login, logout, error, refreshProfile }}>
             {!loading && children}
         </AuthContext.Provider>
     );

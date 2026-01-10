@@ -14,7 +14,8 @@ const Profile = () => {
     const { user } = useAuth();
     const [userProfile, setUserProfile] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [localError, setLocalError] = useState("");
+    const [succes, setSuccces] = useState("")
     const fetchData = async () =>{
 
         setLoading(true);
@@ -51,6 +52,8 @@ const Profile = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="relative -mt-24 bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100">
+            <div className='text-red-500'>{localError}</div>
+            <div className='text-green-500'>{succes}</div>
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <div className="relative">
               <div className="w-40 h-40 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white">
@@ -79,7 +82,7 @@ const Profile = () => {
             </div>
 
             <div className="flex gap-3 items-start">
-              <ImageDropdown />
+              <ImageDropdown onError={setLocalError} onSucces={setSuccces}/>
               <div className="flex items-center">
                 <button className="flex items-center gap-2 px-4 py-2 bg-[#1dbf73] text-white rounded-l-md text-sm font-semibold hover:bg-[#19a463] transition-all">
                   <FontAwesomeIcon icon={faEdit} />
