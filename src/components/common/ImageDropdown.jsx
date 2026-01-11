@@ -73,7 +73,8 @@ const addImages = async () => {
     setProfileImage(null); 
     setCoverImage(null);   
     
-    alert("Profile updated successfully!");
+   onSucces("Profile updated successfully!");
+   window.location.reload();
 
   } catch (err) {
     console.error("Upload failed:", err);

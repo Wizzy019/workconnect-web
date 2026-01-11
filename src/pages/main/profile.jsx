@@ -7,6 +7,7 @@ import {
 import { faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../lib/supabaseClient/supabase';
+import BackButton from '../../components/common/BackButton';
 import ImageDropdown from '../../components/common/ImageDropdown';
 
 const Profile = () => {
@@ -42,6 +43,7 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-[#f3f7f9] pb-12">
+         <BackButton className="absolute z-20" />
       <div className="h-64 w-full relative">
         <img 
           src={profile.cover_image_url} 
@@ -52,8 +54,10 @@ const Profile = () => {
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="relative -mt-24 bg-white rounded-xl shadow-md p-6 sm:p-8 border border-gray-100">
-            <div className='text-red-500'>{localError}</div>
-            <div className='text-green-500'>{succes}</div>
+            <div className='text-center font-medium'>
+                <div className='text-red-500'>{localError}</div>
+                <div className='text-green-500'>{succes}</div>
+            </div>
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <div className="relative">
               <div className="w-40 h-40 rounded-full border-4 border-white shadow-lg overflow-hidden bg-white">

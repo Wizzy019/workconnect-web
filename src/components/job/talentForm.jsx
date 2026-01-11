@@ -1,20 +1,18 @@
 import React, { useRef, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient/supabase';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faCamera, faImage } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faImage } from '@fortawesome/free-solid-svg-icons';
 import BackButton from '../common/BackButton';
 import { useAuth } from '../../context/AuthContext';
 
 const TalentForm = () => {
   const { user, profile } = useAuth();
 
-  const profileInputRef = useRef(null);
   const coverInputRef = useRef(null);
 
   const [loading, setLoading] = useState(false);
   const [skillInput, setSkillInput] = useState('');
   const [localError, setLocalError] = useState("");
-  const [profileImage, setProfileImage] = useState(null);
   const [coverImage, setCoverImage] = useState(null);
   const [succes, setSuccces] = useState("");
   const [formData, setFormData] = useState({
@@ -28,6 +26,9 @@ const TalentForm = () => {
     is_vetted: false,
     offers_consultation: false
   });
+
+  
+  
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -54,6 +55,9 @@ const TalentForm = () => {
     }));
   };
 
+  const profileImageUrl = profile.profile_image_url
+  
+
   const uploadImage = async (file, folder) => {
   const ext = file.name.split(".").pop();
   const filePath = `${folder}/${user.id}-${Date.now()}.${ext}`;
@@ -76,12 +80,7 @@ const TalentForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    let profileImageUrl = null;
     let coverImageUrl = null;
-
-    if(profileImage){
-      profileImageUrl = await uploadImage(profileImage, "profile");
-    }
 
     if(coverImage){
       coverImageUrl = await uploadImage(coverImage, "cover")
@@ -123,24 +122,13 @@ const TalentForm = () => {
         <div className="flex flex-col items-center space-y-4">
           <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200">
             <img 
-              src={formData.profile_image_url || null} 
+              src={profileImageUrl || null} 
               className="w-full h-full rounded-full object-cover" 
               alt="Profile" 
             />
           </div>
           
           <div className="flex flex-col gap-2 w-full items-center">
-            <div className='flex'>
-              <button type="button" className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
-              <FontAwesomeIcon icon={faCamera} className="text-[#1dbf73]" 
-              onClick={() => profileInputRef.current?.click()}
-              />
-              Upload Profile Image
-            </button>
-            <input type="file" accept="image/*" ref={profileInputRef} onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
-            className='w-1/3 flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700'/>
-            </div>
-
            <div className='flex'>
             <button type="button" className="flex items-center gap-2 px-6 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-all">
               <FontAwesomeIcon icon={faImage} className="text-[#1dbf73]" 
