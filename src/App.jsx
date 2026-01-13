@@ -14,6 +14,9 @@ import TalentList from './components/job/talentList'
 import TalentForm from './components/job/talentForm'
 import MyTasks from './pages/main/MyTasks'
 import Profile from './pages/main/profile'
+import Settings from './pages/main/Settings'
+import Wallet from './pages/main/Wallet'
+import Messages from './pages/main/Messages'
 function App() {
   return (
       <Routes>
@@ -33,6 +36,9 @@ function App() {
         <Route path='postgig' element={<TalentForm />} />
         <Route path='/talents' element={<TalentList />} />
         <Route path='/mytasks' element={<ProtectedRoute><MyTasks /></ProtectedRoute>} />
+        <Route path='/settings' element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+        <Route path='/wallet' element={<ProtectedRoute><Wallet /></ProtectedRoute>} />
+        <Route path='/messages' element={<ProtectedRoute><Messages /></ProtectedRoute>} />
       </Routes>
   )
 }

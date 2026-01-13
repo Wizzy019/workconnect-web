@@ -39,7 +39,7 @@ const TalentForm = () => {
   };
 
   const addSkill = (e) => {
-    if (e.key === 'Enter' && skillInput.trim()) {
+    if ((e.key === 'Enter'|| e.key === ",") && skillInput.trim()) {
       e.preventDefault();
       if (!formData.skills.includes(skillInput.trim())) {
         setFormData(prev => ({ ...prev, skills: [...prev.skills, skillInput.trim()] }));

@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../lib/supabaseClient/supabase';
 import { useAuth } from '../../context/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 const PostJobForm = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [skillInput, setSkillInput] = useState('');
   const [localError, setLocalError] = useState(null);
   const [success, setSucces] = useState("")
   const [formData, setFormData] = useState({
@@ -13,7 +16,7 @@ const PostJobForm = () => {
     description: '',
     budget: '',
     deadline: '',
-    skills: '',
+    skills:[],
     client_id: '',
     status: '',
   });
@@ -23,6 +26,24 @@ const PostJobForm = () => {
     setLocalError(null);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
+  const addSkill = (e) => {
+    if ((e.key === 'Enter'|| e.key === ",") && skillInput.trim()) {
+      e.preventDefault();
+      if (!formData.skills.includes(skillInput.trim())) {
+        setFormData(prev => ({ ...prev, skills: [...prev.skills, skillInput.trim()] }));
+      }
+      setSkillInput('');
+    }
+  };
+
+  const removeSkill = (skillToRemove) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.filter(skill => skill !== skillToRemove)
+    }));
+  };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +57,7 @@ const PostJobForm = () => {
         description: formData.description,
         budget: parseFloat(formData.budget),
         deadline: formData.deadline || null,
-        skills: formData.skills.split(',').map(s => s.trim()),
+        skills: formData.skills || [],
         client_id: user.id,
         status: 'Open'
       });
@@ -94,7 +115,7 @@ const PostJobForm = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Budget ($)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Budget (₦)</label>
             <input
               required
               type="number"
@@ -117,18 +138,24 @@ const PostJobForm = () => {
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Required Skills (comma-separated)</label>
-          <input
-            required
-            type="text"
-            name="skills"
-            value={formData.skills}
-            onChange={handleChange}
-            className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 outline-none"
-            placeholder="React, Tailwind"
-          />
-        </div>
+        <div className="space-y-1">
+            <label className="text-[15px] font-semibold text-gray-800">Skills</label>
+            <input 
+              value={skillInput} onKeyDown={addSkill} onChange={(e) => setSkillInput(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:border-[#1dbf73] outline-none transition-all placeholder:text-gray-400" 
+              placeholder="(e.g., PHP, Laravel, Node.js)"
+            />
+            <div className="flex flex-wrap gap-2 mt-3">
+              {formData.skills.map(skill => (
+                <span key={skill} className="bg-[#e4edff] text-[#404145] px-4 py-1.5 rounded-full text-sm font-medium flex items-center gap-2">
+                  {skill}
+                  <button type="button" onClick={() => removeSkill(skill)} className="text-gray-400 hover:text-gray-600">
+                    <FontAwesomeIcon icon={faTimes} size="xs" />
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
 
         <div className="flex items-center justify-end gap-4 pt-4 border-t border-gray-100">
           <button

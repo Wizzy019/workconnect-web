@@ -18,7 +18,7 @@ const JobCard = ({ job }) => {
 
       <div className="space-y-1">
         <p className="text-slate-600">
-          Budget: <span className="font-medium text-slate-900">${job?.budget?.toLocaleString() || "1,200"}</span>
+          Budget: <span className="font-medium text-slate-900"> ₦{job?.budget?.toLocaleString() || "1,200"}</span>
         </p>
         
         <div className="flex items-center gap-2 text-slate-700 py-1">

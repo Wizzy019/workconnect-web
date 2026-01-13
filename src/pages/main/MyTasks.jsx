@@ -41,7 +41,7 @@ const MyTasks = () => {
   if(loading) return <div>loading...</div>
 
   return (
-    <div className="min-h-screen bg-[#fcfcfc] pb-10">
+    <div className="min-h-screen bg-[#a3ffcd28] pb-10">
        <BackButton />
       <div className="max-w-xl mx-auto px-6 py-6 flex items-center border-b border-gray-100 bg-white sticky top-0 z-10">
         <h1 className="flex-1 text-center text-2xl font-bold text-[#001e2b] mr-8">My Tasks</h1>

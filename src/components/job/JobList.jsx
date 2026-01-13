@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabaseClient/supabase";
-import JobCard from "./JobCard"
+import OpportunityCard from "./OpportunityCard";
 
 
 function JobList() {
@@ -17,7 +17,7 @@ function JobList() {
     
         const { data, error } = await supabase
           .from("opportunities")
-          .select("*");
+          .select(`*, client:profiles(id, name, profile_image_url)`);
     
         if (error) setFetchError(error.message);
         else setJobs(data);
@@ -27,13 +27,12 @@ function JobList() {
     
       fetchJobs();
     }, []);
-     
 
   return (
     <> 
-    <div className="grid md:grid-cols-4 gap-4 bg-[#a3ffcd28]">
+    <div className="grid md:grid-cols-4 gap-4">
        {jobs.map(job => (
-        <JobCard key={job.id} job={job} />
+        <OpportunityCard key={job.id} opportunity={job} variant="expanded" randomBg={false}/>
        ))}
     </div>
     </>

@@ -24,7 +24,7 @@ const Register = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: '', email: '', username: '', password: '',
-    role: 'freelancer', age: '', skill: '', country: '',
+    role: 'freelancer', age: '', skills: '', country: '',
     phoneNumber: '', source: '', idType: '', idNumber: ''
   });
 //   const [success, setSuccess] = useState("");

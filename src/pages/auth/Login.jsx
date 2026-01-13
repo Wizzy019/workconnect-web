@@ -42,7 +42,7 @@ const { login, error } = useAuth();
             <InputField label="Email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
             <InputField label="Password" name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
             <button 
-             className="bg-green-700 text-white w-full py-2 rounded"
+             className="bg-[#1dbf73] text-white w-full py-2 rounded"
              >Login</button> 
              <p className='text-sm text-center'>Don't have an account?{" "}
               <Link to="/register" className='text-green-600 font-semibold'>Register</Link></p>

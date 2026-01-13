@@ -40,13 +40,14 @@ export const AuthProvider = ({ children }) => {
 
         if(!data.user){
             throw new Error("Check your email to confirm your account");
-        }
+        };
+       const {password, ...profileData} = formData;
 
         const { error: profileError } = await supabase
         .from("profiles")
         .insert({
              id: data.user.id,
-            ...formData,
+            ...profileData,
         });
 
         if(profileError) throw profileError;
@@ -73,7 +74,9 @@ export const AuthProvider = ({ children }) => {
     .eq("id", data.user.id)
     .single();
 
-  if (profileError) throw profileError;
+  if (profileError){
+    setError(profileError)
+  };
 
   setUser(data.user);
   setProfile(profile);

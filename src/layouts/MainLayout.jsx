@@ -5,10 +5,10 @@ import Topbar from '../components/layout/Topbar'
 function MainLayout() {
   return (
     <div className='w-full bg-[#a3ffcd28] min-h-screen text-pretty'>
-        <Topbar />
         <div className='md:flex md:justify-stretch'>
           <Sidebar />
-      <main>
+      <main className='flex flex-col'>
+        <Topbar />
         <Outlet />
       </main>
         </div>
