@@ -38,6 +38,28 @@ const MyTasks = () => {
     fetchData();
   }, []);
 
+  const handleUpdate = async (id, updatedData) => {
+    const { error } = await supabase.from("talents").update(updatedData).eq("id", id)
+
+    if(error){
+      console.log(error.message);
+    }
+
+    setGigs(prev =>
+      prev.map(gig=> (gig.id === id ? { ...gig, ...updatedData } : gig))
+    );
+  }
+
+  const handleDelete = async (id) => {
+    const { error } = await supabase.from("talents").delete().eq("id", id);
+
+    if(error){
+      console.log(error.message);
+    } else{
+      setGigs(prev => prev.filter(gig => gig.id !== id))
+    }
+  }
+
   if(loading) return <div>loading...</div>
 
   return (
@@ -80,7 +102,7 @@ const MyTasks = () => {
                    <div className="absolute top-4 right-4 bg-green-50 text-[#1dbf73] px-3 py-1 rounded-md text-xs font-bold uppercase">
                       Active
                    </div>
-                   <TalentCard talent={gig} /> 
+                   <TalentCard talent={gig} isOwnerView onDelete={() => handleDelete(gig.id)} onUpdate={(data) => handleUpdate(gig.id, data)}/> 
                    <div className="mt-4 pt-3 border-t border-gray-50 flex items-center text-gray-500 text-sm">
                       <FontAwesomeIcon icon={faEye} className="mr-2" />
                       <span></span>
