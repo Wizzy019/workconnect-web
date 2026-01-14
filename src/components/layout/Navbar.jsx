@@ -13,7 +13,7 @@ function Navbar() {
     { name: "Find Work", path: "/joblist" },
     { name: "Hire Talent", path: "" },
     { name: "About", path: "footer", isScroll: true },
-    { name: "Contact", path: "" },
+    { name: "Contact", path: "footer", isScroll: true },
     { name: "Login", path: "/login" },
   ];
 
@@ -83,7 +83,7 @@ function Navbar() {
         )}
       </nav>
 
-      <Link to="register/step-1" className="text-white">
+      <Link to="/register" className="text-white">
         <button className="w-full bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition hidden md:block">
           Get Started
         </button>

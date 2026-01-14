@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import Logo from '../../assets/logos/logo.png'
 
 function Sidebar() {
   const { logout, profile } = useAuth();
@@ -76,9 +77,9 @@ function Sidebar() {
           
           <div className="flex items-center justify-between mb-10">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#1dbf73] rounded-xl flex items-center justify-center shadow-lg shadow-green-100">
-                <span className="text-white font-black text-xl italic">W</span>
-              </div>
+            <div>
+              <img src={Logo} alt="workconnect-logo" className="size-20" />
+            </div>
               <span className="font-black text-[#001e2b] text-xl tracking-tight">Workconnect</span>
             </div>
             <button onClick={() => setOpen(false)} className="md:hidden text-gray-400 hover:text-red-500">

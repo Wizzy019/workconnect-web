@@ -1,11 +1,7 @@
-import { useAuth } from "../../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faSlidersH, faCalendarAlt } from "@fortawesome/free-solid-svg-icons";
 
 function Topbar() {
-  const { profile } = useAuth();
-  const role = profile?.role || "User";
-
   return (
     <header className="w-full flex flex-col md:flex-row items-center justify-between gap-4 py-6 px-0 bg-transparent">
       

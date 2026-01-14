@@ -1,15 +1,16 @@
 
 import { Link } from 'react-router-dom'
-import BackgroundImage from '../assets/images/bachground.jpg'
+import BackgroundImage from '../assets/images/background.jfif'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCheckCircle, faClipboardCheck, faDiagramProject, faGlobeAfrica, faMagnifyingGlass, faMoneyBill1Wave, faSignal, faUserPlus, faUsers } from '@fortawesome/free-solid-svg-icons'
+import Logo from '../assets/logos/logo.png'
 import Tech from '../assets/images/Tech.jpg'
 import Business from '../assets/images/Support.jpg'
 import Writing from '../assets/images/Writing.jpg'
 import Creative from '../assets/images/Creative.jpg'
 import Local from '../assets/images/Local.jpg'
 import Macketing from '../assets/images/Marketing.jpg'
-import LayerBackgroundImage from '../assets/images/Bgimage.jpeg'
+import LayerBackgroundImage from '../assets/images/Bgimage.jfif'
 import Footer from '../components/layout/Footer'
 import Navbar from '../components/layout/Navbar'
 
@@ -42,13 +43,13 @@ const BulletPoint = ({icon, label}) => (
       </div>
     );
 
-    const FooterCol = ({headind, label1, label2, label3, label4}) => (
+    const FooterCol = ({headind, label1, label2, label3, label4, link1="", link2="", link3="", link4=""}) => (
       <div className='cursor-pointer flex flex-col'>
         <h3 className='font-medium'>{headind}</h3>
-        <a href="#">{label1}</a>
-        <a href="#">{label2}</a>
-        <a href="#">{label3}</a>
-        <a href="#">{label4}</a>
+        <a href={link1}>{label1}</a>
+        <a href={link2}>{label2}</a>
+        <a href={link3}>{label3}</a>
+        <a href={link4}>{label4}</a>
       </div>
     );
 
@@ -111,12 +112,28 @@ function Home() {
      </div>
      <div className='flex flex-col md:flex-row items-center justify-between w-full md:w-1/3 m-10 p-2'>
       <p className='text-xl text-white'>Ready to Get Started?</p>
-      <Link to="register/step-1" className='text-white'>
+      <Link to="/register" className='text-white'>
             <button className='bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition md:block'
           >Get Started</button></Link>
      </div>
     </section>
-    <section id='footer' className='h-screen flex flex-col items-center justify-between bg-[#e0ffe9]'>
+    <section id='footer' className='h-screen flex flex-col justify-between bg-[#e0ffe9]'>
+      <div className='flex items-center justify-evenly'>
+        <div className='p-4 flex flex-col items-start'>
+       <div className='flex items-center'> 
+        <img src={Logo} alt="workconnect-logo" className='size-20'/>
+       <h1 className='text-4xl font-bold text-pretty'>Workconnect</h1>
+       </div>
+        <div>
+          WorkConnect connects skilled professionals with real job opportunities,<br/> making hiring and getting hired simple, fast, and reliable.
+        </div>
+      </div>
+      <div>
+       <h2 className='text-xl font-semibold'>Contant Us</h2>
+        <p>Email: <a href="">supportworkconnect@gmail.com</a></p>
+        <p>Phone: +2348078483295</p>
+      </div>
+      </div>
       <div className='w-full grid grid-cols-2 md:grid-cols-4 items-center justify-evenlyn gap-5 p-4'>
        <FooterCol headind="WorkConnect" label1="About Us" label2="Careers" label3="Blog" label4="Help Center" />
        <FooterCol headind="For Workers" label1="Find Work" label2="Skill Assessment" label3="Profile Tips" label4="Support" />
