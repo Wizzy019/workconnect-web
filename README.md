@@ -1,5 +1,18 @@
-# workconnect-web
+# # WorkConnect App
 
-The web repository of my workconnect app
+**WorkConnect** is a platform connecting skilled workers with people offering jobs, helping both sides find the right match efficiently.
 
-> > > > > > > 8ac0a4dd4d02c93a521bce1c140dbbee765c88e7
+## Key Features
+- Worker profiles showcasing skills
+- Job posting and browsing for job providers
+- Dashboard interface for managing jobs and applications
+- Responsive UI for desktop and mobile
+
+## Tech Stack
+React.js | Tailwind CSS | Supabase (Auth & Database) | Git/GitHub
+
+## Project Status
+Almost finished — core functionality implemented and UI polished.
+
+## Skills Demonstrated
+Frontend development, component-based UI, state management, data fetching, authentication, CRUD operations, responsive design, project-based development
