@@ -117,21 +117,16 @@ function Home() {
           >Get Started</button></Link>
      </div>
     </section>
-    <section id='footer' className='h-screen flex flex-col justify-between bg-[#e0ffe9]'>
-      <div className='flex items-center justify-evenly'>
-        <div className='p-4 flex flex-col items-start'>
-       <div className='flex items-center'> 
-        <img src={Logo} alt="workconnect-logo" className='size-20'/>
-       <h1 className='text-4xl font-bold text-pretty'>Workconnect</h1>
+    <section id='footer' className='min-h-screen flex flex-col justify-between bg-[#e0ffe9]'>
+      <div className='flex md:flex-row items-start p-2'>
+        <div className='w-full p-4 flex flex-col md:flex-row md:items-center justify-evenly items-start'>
+          <div className='flex items-center justify-start'> 
+          <img src={Logo} alt="workconnect-logo" className='size-20'/>
+            <h1 className='text-4xl font-bold text-pretty'>Workconnect</h1>
        </div>
-        <div>
-          WorkConnect connects skilled professionals with real job opportunities,<br/> making hiring and getting hired simple, fast, and reliable.
+        <div className='text-xl font-semibold p-4'>
+          Workconnect connects skilled professionals with real job opportunities,<br/> making hiring and getting hired simple, fast, and reliable.
         </div>
-      </div>
-      <div>
-       <h2 className='text-xl font-semibold'>Contant Us</h2>
-        <p>Email: <a href="">supportworkconnect@gmail.com</a></p>
-        <p>Phone: +2348078483295</p>
       </div>
       </div>
       <div className='w-full grid grid-cols-2 md:grid-cols-4 items-center justify-evenlyn gap-5 p-4'>
@@ -140,6 +135,11 @@ function Home() {
        <FooterCol headind="For Clients" label1="Hire Talent" label2="Pricing" label3="Post a Job" label4="Contact Sales" />
        <FooterCol headind="Legal" label1="Terms of Service" label2="Privacy Policy" label3="Community Guidelines" />
       </div >
+      <div className='self-start p-4'>
+       <h2 className='text-xl font-semibold'>Contant Us</h2>
+        <p>Email: <a href="">supportworkconnect@gmail.com</a></p>
+        <p>Phone: +2348078483295</p>
+      </div>
       <Footer />
     </section>
     </>
