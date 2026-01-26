@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
- // Reusable Input Component for cleaner code
   const InputField = ({ label, name, type = "text", value, placeholder, onChange }) => (
     <div className="mb-4">
       <label className="block text-gray-700 text-sm font-bold mb-1">{label}</label>
@@ -54,7 +53,6 @@ const Register = () => {
     navigate(`/dashboard/${formData.role}`);
   } catch (err) {
     err.message
-    // error already handled in context
   }
 };
 
@@ -63,10 +61,8 @@ const Register = () => {
   
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
-        
-        {/* Progress Indicator */}
+    <div className="min-h-screen flex items-center justify-center p-4">
+      <div className="p-8 rounded-xl shadow-lg w-full max-w-md">
         <div className="flex justify-between mb-8">
           {[1, 2, 3].map((num) => (
             <div key={num} className={`w-1/3 h-2 rounded-full mx-1 ${step >= num ? 'bg-green-500' : 'bg-gray-200'}`} />
@@ -74,10 +70,8 @@ const Register = () => {
         </div>  
         {error && <p className="text-sm text-red-500 ">{error}</p>}
             <form onSubmit={handleSubmit}>
-          {/* STEP 1 */}
           {step === 1 && (
             <div className="animate-fadeIn">
-                {/* {success && <p className='text-sm text-green-500'>{success}</p>} */}
               <h2 className="text-2xl font-bold mb-6 text-gray-800">Account Details</h2>
               <InputField label="Full Name" name="name" value={formData.name} onChange={handleChange}/>
               <InputField label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
@@ -85,8 +79,6 @@ const Register = () => {
               <InputField label="Password" name="password" type="password" value={formData.password} onChange={handleChange} />
             </div>
           )}
-
-          {/* STEP 2 */}
           {step === 2 && (
             <div className="animate-fadeIn">
               <h2 className="text-2xl font-bold mb-6 text-gray-800">Profile Info</h2>
@@ -104,8 +96,6 @@ const Register = () => {
               <InputField label="Country" name="country" value={formData.country} onChange={handleChange} />
             </div>
           )}
-
-          {/* STEP 3 */}
           {step === 3 && (
             <div className="animate-fadeIn">
               <h2 className="text-2xl font-bold mb-6 text-gray-800">Final Verification</h2>
@@ -130,8 +120,6 @@ const Register = () => {
               <InputField label="ID Number" name="idNumber" value={formData.idNumber} onChange={handleChange} />
             </div>
           )}
-
-          {/* Navigation Buttons */}
           <div className="flex justify-between mt-8">
             {step > 1 ? (
               <button type="button" onClick={prevStep}  className="bg-green-700 text-white p-2 rounded">

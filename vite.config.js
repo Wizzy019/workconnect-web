@@ -1,8 +1,9 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import proccess from 'process'
 import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
  plugins: [react(), tailwindcss()],
- base: '/workconnect-web/'
+ base: proccess.env.VITE_BASE_PATH || '/workconnect-web/',
 })

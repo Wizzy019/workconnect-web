@@ -45,7 +45,7 @@ const { login, error } = useAuth();
              className="bg-[#1dbf73] text-white w-full py-2 rounded"
              >Login</button> 
              <p className='text-sm text-center'>Don't have an account?{" "}
-              <Link to="/register" className='text-green-600 font-semibold'>Register</Link></p>
+              <Link to="/register" className='text-green-600 font-semibold'>Register</Link></p>``
             </form>
   )
 }
