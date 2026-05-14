@@ -7,47 +7,46 @@ import { supabase } from "../../lib/supabaseClient/supabase";
 import JobCard from "./JobCard";
 import BackButton from "../common/BackButton";
 
-
 const MyJobsList = () => {
-
   const { user } = useAuth();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
- useEffect(() => {
-  const fetchJobs = async () => {
-    if (!user) return;
+  useEffect(() => {
+    const fetchJobs = async () => {
+      if (!user) return;
 
-    setLoading(true);
-    setFetchError(null);
+      setLoading(true);
+      setFetchError(null);
 
-    const { data, error } = await supabase
-      .from("opportunities")
-      .select("*")
-      .eq("client_id", user.id);
+      const { data, error } = await supabase
+        .from("workconnect_opportunities")
+        .select("*")
+        .eq("client_id", user.id);
 
-    if (error) setFetchError(error.message);
-    else setJobs(data);
+      if (error) setFetchError(error.message);
+      else setJobs(data);
 
-    setLoading(false);
-  };
+      setLoading(false);
+    };
 
-  fetchJobs();
-}, [user]); 
-
+    fetchJobs();
+  }, [user]);
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div><BackButton /></div>
+      <div>
+        <BackButton />
+      </div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold text-slate-900">My Jobs</h1>
         {jobs.length > 0 && (
-           <Link to="/postjob">
-          <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-95">
-            <FontAwesomeIcon icon={faPlus} className="" />
-            Post job
-          </button>
+          <Link to="/postjob">
+            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-95">
+              <FontAwesomeIcon icon={faPlus} className="" />
+              Post job
+            </button>
           </Link>
         )}
       </div>
@@ -67,9 +66,9 @@ const MyJobsList = () => {
             You haven't posted any Job yet
           </p>
           <Link to="/postjob">
-          <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-95">
-            Post your first job
-          </button>
+            <button className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg active:scale-95">
+              Post your first job
+            </button>
           </Link>
         </div>
       )}

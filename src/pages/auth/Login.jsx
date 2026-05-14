@@ -36,7 +36,6 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     const role = await login(email, password);
-    console.log(role);
 
     if (error) {
       console.log(error.message);
