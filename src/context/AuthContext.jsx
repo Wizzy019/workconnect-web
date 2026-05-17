@@ -81,6 +81,10 @@ export const AuthProvider = ({ children }) => {
       .eq("id", data.user.id)
       .single();
 
+    if (error) {
+      console.log(error);
+    }
+
     if (profileError) {
       setError(profileError.message);
       return;
