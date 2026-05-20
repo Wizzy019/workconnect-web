@@ -8,7 +8,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
 
-const ImageDropdown = ({ onError, onSucces }) => {
+const STORAGE_BUCKET = "workconnect_profiles_images";
+const PROFILE_TABLE = "workconnect_profiles";
+const MATCH_COLUMN = "id";
+const PROFILE_URL_COLUMN = "profile_image_url";
+const COVER_URL_COLUMN = "cover_image_url";
+
+const ImageDropdown = ({ onError, onSucces, onSuccess }) => {
   const { user, profile, refreshProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -16,89 +22,95 @@ const ImageDropdown = ({ onError, onSucces }) => {
   const profileInputRef = useRef(null);
   const coverInputRef = useRef(null);
 
-  const [profileImage, setProfileImage] = useState(null);
-  const [coverImage, setCoverImage] = useState(null);
+  const notifySuccess = onSuccess || onSucces;
 
-  const uploadImage = async (file, folder, userId) => {
-    const ext = file.name.split(".").pop();
-    const filePath = `${folder}/${userId}-${Date.now()}.${ext}`;
+  const extractStoragePathFromUrl = (url) => {
+    if (!url) return null;
+
+    const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+    const markerIndex = url.indexOf(marker);
+    if (markerIndex === -1) return null;
+
+    const fullPath = url.slice(markerIndex + marker.length);
+    const [pathWithoutQuery] = fullPath.split("?");
+    return pathWithoutQuery || null;
+  };
+
+  const uploadImage = async (file, folder) => {
+    if (!user?.id) throw new Error("User not found");
+    if (!file) throw new Error("No file selected");
+    if (!file.type?.startsWith("image/")) {
+      throw new Error("Only image files are allowed");
+    }
+
+    const extFromName = file.name?.includes(".")
+      ? file.name.split(".").pop()?.toLowerCase()
+      : "";
+    const extFromType = file.type.split("/")[1]?.toLowerCase() || "png";
+    const extension = extFromName || extFromType;
+    const uniquePart =
+      typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+    const filePath = `${folder}/${user.id}-${uniquePart}.${extension}`;
 
     const { error: uploadError } = await supabase.storage
-      .from("workconnect_profiles_images")
-      .upload(filePath, file);
+      .from(STORAGE_BUCKET)
+      .upload(filePath, file, { contentType: file.type });
 
     if (uploadError) throw uploadError;
 
     const { data } = supabase.storage
-      .from("workconnect_profiles_images")
+      .from(STORAGE_BUCKET)
       .getPublicUrl(filePath);
 
     return { publicUrl: data.publicUrl, filePath };
   };
 
-  const addImages = async () => {
-    if (!user || loading) return;
-
+  const handleImageUpload = async (file, imageType) => {
+    if (loading) return;
     setLoading(true);
-    const updates = {};
-    const pathsToDelete = [];
 
     try {
-      if (profileImage) {
-        const { publicUrl, filePath } = await uploadImage(
-          profileImage,
-          "profile",
-          user.id,
-        );
-        updates.profile_image_url = publicUrl;
-        updates.profile_image_path = filePath;
-        if (profile?.profile_image_path)
-          pathsToDelete.push(profile.profile_image_path);
-      }
+      const folder = imageType === "profile" ? "profile" : "cover";
+      const urlColumn =
+        imageType === "profile" ? PROFILE_URL_COLUMN : COVER_URL_COLUMN;
+      const previousUrl = profile?.[urlColumn] || null;
+      const { publicUrl } = await uploadImage(file, folder);
 
-      if (coverImage) {
-        const { publicUrl, filePath } = await uploadImage(
-          coverImage,
-          "cover",
-          user.id,
-        );
-        updates.cover_image_url = publicUrl;
-        updates.cover_image_path = filePath;
-        if (profile?.cover_image_path)
-          pathsToDelete.push(profile.cover_image_path);
-      }
-
-      if (Object.keys(updates).length === 0) return;
-
-      const { error: dbError } = await supabase
-        .from("profiles")
-        .update(updates)
-        .eq("id", user.id);
+      const { data: updatedRow, error: dbError } = await supabase
+        .from(PROFILE_TABLE)
+        .update({ [urlColumn]: publicUrl })
+        .eq(MATCH_COLUMN, user.id)
+        .select(MATCH_COLUMN)
+        .maybeSingle();
 
       if (dbError) throw dbError;
+      if (!updatedRow) {
+        throw new Error("Profile row update failed. No matching row found.");
+      }
 
-      if (pathsToDelete.length > 0) {
-        await supabase.storage.from("profile_images").remove(pathsToDelete);
+      const previousPath = extractStoragePathFromUrl(previousUrl);
+      if (previousPath) {
+        const { error: removeError } = await supabase.storage
+          .from(STORAGE_BUCKET)
+          .remove([previousPath]);
+        if (removeError) {
+          console.warn("Old image cleanup failed:", removeError.message);
+        }
       }
 
       await refreshProfile();
-      setProfileImage(null);
-      setCoverImage(null);
+      setIsOpen(false);
 
-      onSucces("Profile updated successfully!");
-      window.location.reload();
+      notifySuccess?.("Profile updated successfully!");
     } catch (err) {
       console.error("Upload failed:", err);
-      onError(err.message || "An error occurred during upload");
+      onError?.(err.message || "An error occurred during upload");
     } finally {
       setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (!profileImage && !coverImage) return;
-    addImages();
-  }, [profileImage, coverImage]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -145,7 +157,11 @@ const ImageDropdown = ({ onError, onSucces }) => {
             accept="image/*"
             ref={profileInputRef}
             hidden
-            onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleImageUpload(file, "profile");
+              e.target.value = "";
+            }}
           />
           <button
             type="button"
@@ -166,7 +182,11 @@ const ImageDropdown = ({ onError, onSucces }) => {
             accept="image/*"
             ref={coverInputRef}
             hidden
-            onChange={(e) => setCoverImage(e.target.files?.[0] || null)}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleImageUpload(file, "cover");
+              e.target.value = "";
+            }}
           />
         </div>
       )}
