@@ -1,4 +1,4 @@
-import { Link, NavLink} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import Logo from "../../assets/logos/logo.png";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -27,15 +27,15 @@ function Navbar() {
 
   // Handle clicks on navbar items
   const handleNavClick = (item) => {
-  if (item.isScroll) {
-    scrollToSection(item.path.replace("#", ""));
-  }
-  setOpen(false); // close mobile menu
-};
+    if (item.isScroll) {
+      scrollToSection(item.path.replace("#", ""));
+    }
+    setOpen(false); // close mobile menu
+  };
 
   return (
     <header className="w-full flex justify-between md:items-center bg-black text-white h-15">
-      <div className="w-full flex items-center justify-evenly md:w-auto">
+      <div className="w-full flex items-center justify-evenly px-5 md:w-auto">
         <img src={Logo} alt="workconnect-logo" className="size-10 md:size-15" />
         <h2 className="text-white font-bold cursor-pointer">WorkConnect</h2>
         <div className="text-right ml-auto md:hidden">
@@ -50,7 +50,9 @@ function Navbar() {
       <nav
         className={`absolute w-full flex flex-col p-4 text-xl bg-black font-medium transition-transform duration-700 ease-in-out z-20 
         md:relative md:w-auto md:flex-row md:items-center md:h-15 md:opacity-100 md:translate-y-0 ${
-          open ? "h-screen opacity-100 translate-y-0 text-3xl" : "opacity-0 -translate-y-full"
+          open
+            ? "h-screen opacity-100 translate-y-0 text-3xl"
+            : "opacity-0 -translate-y-full"
         }`}
       >
         <div className="text-right md:hidden">
@@ -79,7 +81,7 @@ function Navbar() {
             >
               {item.name}
             </NavLink>
-          )
+          ),
         )}
       </nav>
 

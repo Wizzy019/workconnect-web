@@ -7,6 +7,7 @@ import {
   faPhone,
   faGlobe,
   faChevronDown,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { useAuth } from "../../context/AuthContext";
@@ -26,13 +27,19 @@ const Profile = () => {
     setLoading(true);
 
     if (user) {
-      const { data: profileData } = await supabase
+      const { data: profiles, error } = await supabase
         .from("workconnect_profiles")
         .select("*")
-        .eq("id", user.id)
         .select();
 
-      setUserProfile(profileData);
+      const profile = profiles.find((profile) => profile.id === user.id);
+
+      setUserProfile(profile);
+
+      if (error) {
+        console.log("Erro fetching profile", error.message);
+        return;
+      }
     }
     setLoading(false);
   };
@@ -41,6 +48,8 @@ const Profile = () => {
     fetchData();
   }, []);
 
+  const profile = userProfile;
+
   const handleUpdateChange = () => {
     refreshProfile();
     setSuccces("Profile updated succesfully");
@@ -48,8 +57,6 @@ const Profile = () => {
   };
 
   if (loading) return <div>loading...</div>;
-
-  const profile = userProfile[0];
 
   return (
     <>
@@ -149,6 +156,16 @@ const Profile = () => {
                   <span className="text-gray-700 font-medium">
                     Email:{" "}
                     <span className="text-[#1dbf73]">{profile.email}</span>
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-sm">
+                  <FontAwesomeIcon
+                    icon={faUser}
+                    className="w-5 text-[#1dbf73]"
+                  />
+                  <span className="text-gray-700 font-medium">
+                    Username:{" "}
+                    <span className="text-[#1dbf73]">{profile.username}</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-3 text-sm">

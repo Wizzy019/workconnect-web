@@ -31,9 +31,9 @@ const BulletPoint = ({ icon, label }) => (
 );
 
 const StepsGuide = ({ icon, label }) => (
-  <div className="flex items-center justify-around p-2 w-60 border border-green-700 rounded-2xl text-sm cursor-pointer">
+  <div className="flex items-center gap-3 py-2 px-6 w-60 border border-green-700 rounded-2xl text-sm cursor-pointer">
     <FontAwesomeIcon icon={icon} className="text-green-700" />
-    <p>{label}</p>
+    <p className="text-center w-2/3">{label}</p>
   </div>
 );
 
@@ -94,7 +94,7 @@ function Home() {
             fast, simple, and trustworthy
           </h3>
           <Link to="/register" className="text-white">
-            <button className="bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition md:block">
+            <button className="bg-emerald-600 text-white mt-10 px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition md:block">
               Get Started
             </button>
           </Link>
@@ -104,7 +104,7 @@ function Home() {
         <h1 className="text-3xl font-semibold md:text-4xl md:font-bold py-3">
           Why Workconnect
         </h1>
-        <h2 className="text-xl md:text-2xl font-semibold my-2">
+        <h2 className="text-xl md:text-2xl font-semibold py-8 px-4 my-2">
           Why people choose workconnect
         </h2>
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-2">
@@ -131,7 +131,7 @@ function Home() {
         className="h-screen md:h-72 flex flex-col items-center justify-center text-center text-pretty p-2 bg-[#F0FDF4]"
       >
         <h2 className="text-2xl font-semibold my-2">How it Works</h2>
-        <div className="flex flex-col md:flex-row items-center justify-between mt-10 gap-4">
+        <div className="flex flex-col justify-center md:flex-row items-centermt-10 gap-4">
           <StepsGuide icon={faUserPlus} label="Create your profile" />
           <StepsGuide icon={faMagnifyingGlass} label="Browse Available Work" />
           <StepsGuide icon={faClipboardCheck} label="Accept Task" />
@@ -155,7 +155,7 @@ function Home() {
           backgroundImage: `linear-gradient(rgba(0,75,0,0.6),rgba(0,70,0,0.9)),url(${LayerBackgroundImage})`,
         }}
       >
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 justify-between w-full">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-15 justify-between w-full">
           <Indicators
             icon={faCheckCircle}
             count="2,400+"
