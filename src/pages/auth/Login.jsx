@@ -72,7 +72,6 @@ function Login() {
           Register
         </Link>
       </p>
-      ``
     </form>
   );
 }

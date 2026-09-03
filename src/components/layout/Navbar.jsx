@@ -1,97 +1,134 @@
-import { Link, NavLink } from "react-router-dom";
-import Logo from "../../assets/logos/logo.png";
-import { useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {
+  faUserGroup,
+  faBars,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import Button from "../home/Button";
+import { NavLink } from "react-router-dom";
+import { SmartNavLink } from "../common/SmartNavLink";
 
-function Navbar() {
-  const [open, setOpen] = useState(false);
+const NAV_LINKS = [
+  { label: "Home", path: "/" },
+  { label: "How It Works", path: "#how-it-works" },
+  { label: "Find Work", path: "#find-work" },
+  { label: "Hire Talent", path: "#hire-talent" },
+];
 
-  const NavItems = [
-    { name: "Home", path: "/" },
-    { name: "How It Works", path: "#steps", isScroll: true },
-    { name: "Find Work", path: "/joblist" },
-    { name: "Hire Talent", path: "" },
-    { name: "About", path: "footer", isScroll: true },
-    { name: "Contact", path: "footer", isScroll: true },
-    { name: "Login", path: "/login" },
-  ];
-
-  const scrollToSection = (id) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-      setOpen(false); // close mobile menu
-    }
-  };
-
-  // Handle clicks on navbar items
-  const handleNavClick = (item) => {
-    if (item.isScroll) {
-      scrollToSection(item.path.replace("#", ""));
-    }
-    setOpen(false); // close mobile menu
-  };
+/**
+ * Navbar
+ *
+ * Top navigation: brand logo, primary links (with active-state support),
+ * a "Log In" text link, and the "Get Started" primary CTA. Collapses to
+ * a hamburger menu on mobile.
+ *
+ * activePath: which NAV_LINKS.path is currently active (defaults to "/")
+ */
+export default function Navbar({
+  activePath = "/",
+  onLoginClick,
+  onGetStartedClick,
+}) {
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <header className="w-full flex justify-between md:items-center bg-black text-white h-15">
-      <div className="w-full flex items-center justify-evenly px-5 md:w-auto">
-        <img src={Logo} alt="workconnect-logo" className="size-10 md:size-15" />
-        <h2 className="text-white font-bold cursor-pointer">WorkConnect</h2>
-        <div className="text-right ml-auto md:hidden">
+    <header className="w-full sticky top-0 z-50 bg-wc-background border-b border-wc-border font-wc-sans">
+      <div className="flex items-center justify-between h-[72px] px-wc-container md:px-wc-8">
+        {/* Logo */}
+        <a path="/" className="flex items-center gap-wc-2 shrink-0">
           <FontAwesomeIcon
-            icon={faBars}
-            className="text-white text-xl"
-            onClick={() => setOpen(true)}
+            icon={faUserGroup}
+            className="text-wc-primary text-wc-lg"
+            aria-hidden="true"
           />
+          <span className="text-wc-base font-wc-semibold text-wc-text-heading">
+            WorkConnect
+          </span>
+        </a>
+
+        {/* Desktop nav links */}
+        <nav className="hidden md:flex items-center gap-wc-8">
+          {NAV_LINKS.map((link) => {
+            const isActive = link.path === activePath;
+            return (
+              <SmartNavLink
+                key={link.path}
+                to={link.path}
+                className={
+                  isActive
+                    ? "text-wc-sm font-wc-medium text-wc-primary"
+                    : "text-wc-sm font-wc-medium text-wc-text hover:text-wc-text-heading transition-colors duration-wc-fast"
+                }
+              >
+                {link.label}
+              </SmartNavLink>
+            );
+          })}
+        </nav>
+
+        {/* Desktop actions */}
+        <div className="hidden md:flex items-center gap-wc-6">
+          <button
+            type="button"
+            onClick={onLoginClick}
+            className="text-wc-sm font-wc-medium text-wc-text hover:text-wc-text-heading transition-colors duration-wc-fast"
+          >
+            Log In
+          </button>
+          <Button variant="primary" size="sm" onClick={onGetStartedClick}>
+            Get Started
+          </Button>
         </div>
+
+        {/* Mobile toggle */}
+        <button
+          type="button"
+          className="md:hidden text-wc-text-heading text-wc-lg p-wc-2 -mr-2"
+          aria-label={mobileOpen ? "Close menu" : "Open menu"}
+          aria-expanded={mobileOpen}
+          onClick={() => setMobileOpen((open) => !open)}
+        >
+          <FontAwesomeIcon icon={mobileOpen ? faXmark : faBars} />
+        </button>
       </div>
 
-      <nav
-        className={`absolute w-full flex flex-col p-4 text-xl bg-black font-medium transition-transform duration-700 ease-in-out z-20 
-        md:relative md:w-auto md:flex-row md:items-center md:h-15 md:opacity-100 md:translate-y-0 ${
-          open
-            ? "h-screen opacity-100 translate-y-0 text-3xl"
-            : "opacity-0 -translate-y-full"
-        }`}
-      >
-        <div className="text-right md:hidden">
-          <FontAwesomeIcon
-            icon={faTimes}
-            className="text-white"
-            onClick={() => setOpen(false)}
-          />
-        </div>
-
-        {NavItems.map((item) =>
-          item.isScroll ? (
-            <button
-              key={item.name}
-              onClick={() => handleNavClick(item)}
-              className="text-white p-2 text-center text-3xl md:text-xl"
-            >
-              {item.name}
-            </button>
-          ) : (
-            <NavLink
-              key={item.name}
-              to={item.path}
-              onClick={() => setOpen(false)}
-              className="text-white p-2 text-center text-3xl md:text-xl"
-            >
-              {item.name}
-            </NavLink>
-          ),
-        )}
-      </nav>
-
-      <Link to="/register" className="text-white">
-        <button className="w-full bg-emerald-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-emerald-700 transition hidden md:block">
-          Get Started
-        </button>
-      </Link>
+      {/* Mobile menu */}
+      {mobileOpen && (
+        <nav className="md:hidden border-t border-wc-border px-wc-container py-wc-4 flex flex-col gap-wc-4 bg-wc-background">
+          {NAV_LINKS.map((link) => {
+            const isActive = link.path === activePath;
+            return (
+              <SmartNavLink
+                key={link.pSmartNavLinkth}
+                to={link.path}
+                className={
+                  isActive
+                    ? "text-wc-sm font-wc-medium text-wc-primary"
+                    : "text-wc-sm font-wc-medium text-wc-text"
+                }
+              >
+                {link.label}
+              </SmartNavLink>
+            );
+          })}
+          <button
+            type="button"
+            onClick={onLoginClick}
+            className="text-wc-sm font-wc-medium text-wc-text text-left"
+          >
+            Log In
+          </button>
+          <Button
+            variant="primary"
+            size="sm"
+            fullWidth
+            onClick={onGetStartedClick}
+          >
+            Get Started
+          </Button>
+        </nav>
+      )}
     </header>
   );
 }
-
-export default Navbar;
