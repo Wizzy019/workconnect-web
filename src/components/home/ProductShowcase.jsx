@@ -6,7 +6,7 @@ import {
   faStar,
 } from "@fortawesome/free-solid-svg-icons";
 import SectionHeading from "./SectionHeading";
-import Button from "./Button";
+import Button from "../common/Button";
 
 const FIND_WORK_NAV = [
   "Browse Jobs",

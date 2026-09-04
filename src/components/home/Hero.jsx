@@ -6,7 +6,7 @@ import {
   faStar,
   faLink,
 } from "@fortawesome/free-solid-svg-icons";
-import Button from "./Button";
+import Button from "../common/Button";
 
 /** A single row inside the "Featured Jobs" card. */
 function JobListingItem({

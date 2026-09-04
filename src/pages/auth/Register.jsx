@@ -1,73 +1,59 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-const InputField = ({
-  label,
-  name,
-  type = "text",
-  value,
-  placeholder,
-  onChange,
-}) => (
-  <div className="mb-4">
-    <label className="block text-gray-700 text-sm font-bold mb-1">
-      {label}
-    </label>
-    <input
-      type={type}
-      name={name}
-      value={value}
-      onChange={onChange}
-      placeholder={placeholder}
-      className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-    />
-  </div>
-);
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUserGroup,
+  faUser,
+  faLock,
+  faEye,
+  faEyeSlash,
+  faArrowRight,
+  faEnvelope,
+  faBriefcase,
+} from "@fortawesome/free-solid-svg-icons";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import FormField from "../../components/common/FormField.jsx";
+import Button from "../../components/common/Button.jsx";
 
-const Register = () => {
+const ACCOUNT_TYPE_OPTIONS = [
+  { value: "", label: "Select your account type", disabled: true },
+  { value: "freelancer", label: "Find work" },
+  { value: "client", label: "Hire talent" },
+];
+
+/**
+ * SignupPage
+ *
+ * "Create your account" — one focused card: full name, email, username,
+ * password, and an account-type select, plus primary Create Account
+ * action, Google SSO, and a link back to the login page.
+ */
+export default function SignupPage({ onGoogleClick, onLoginClick }) {
   const { signUp, error } = useAuth();
-
-  const [step, setStep] = useState(1);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     username: "",
     password: "",
-    role: "freelancer",
-    age: "",
-    skill: "",
-    country: "",
-    phoneNumber: "",
-    source: "",
-    idType: "",
-    idNumber: "",
+    role: "",
   });
-  //   const [success, setSuccess] = useState("");
+  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const nextStep = () => {
-    if (
-      step === 1 &&
-      (!formData.name || !formData.email || !formData.password)
-    ) {
-      return;
-    }
-    setStep(step + 1);
-  };
-
-  const prevStep = () => setStep(step - 1);
+  const handleChange = (field) => (e) =>
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
 
-    if (!formData.phoneNumber || !formData.idNumber) return;
+    if (!formData.email || !formData.name || !formData.password) return;
 
     try {
       await signUp(formData);
+      setSuccess("Success ✔");
       navigate(`/dashboard/${formData.role}`);
     } catch (err) {
       err.message;
@@ -75,185 +61,139 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <div className="p-8 rounded-xl shadow-lg w-full max-w-md">
-        <div className="flex justify-between mb-8">
-          {[1, 2, 3].map((num) => (
-            <div
-              key={num}
-              className={`w-1/3 h-2 rounded-full mx-1 ${step >= num ? "bg-green-500" : "bg-gray-200"}`}
-            />
-          ))}
+    <div className="min-h-screen bg-wc-surface flex flex-col items-center justify-center px-wc-container py-wc-12 font-wc-sans">
+      <div className="w-full max-w-wc-content-sm bg-wc-background border border-wc-border rounded-wc-lg shadow-wc-md p-wc-8">
+        {/* Brand */}
+        <div className="flex flex-col items-center text-center mb-wc-8">
+          <FontAwesomeIcon
+            icon={faUserGroup}
+            className="text-wc-primary text-wc-3xl mb-wc-2"
+            aria-hidden="true"
+          />
+          <span className="text-wc-xl font-wc-semibold text-wc-text-heading">
+            WorkConnect
+          </span>
         </div>
-        {error && <p className="text-sm text-red-500 ">{error}</p>}
-        <form onSubmit={handleSubmit}>
-          {step === 1 && (
-            <div className="animate-fadeIn">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800">
-                Account Details
-              </h2>
-              <InputField
-                label="Full Name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Email"
-                name="email"
-                type="email"
-                value={formData.email}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-              <InputField
-                label="Password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-          )}
-          {step === 2 && (
-            <div className="animate-fadeIn">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800">
-                Profile Info
-              </h2>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-1">
-                  Role
-                </label>
-                <select
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-lg"
-                >
-                  <option value="freelancer">Freelancer</option>
-                  <option value="client">Client</option>
-                </select>
-              </div>
-              <InputField
-                label="Age"
-                name="age"
-                type="number"
-                value={formData.age}
-                onChange={handleChange}
-              />
-              {formData.role === "freelancer" && (
-                <InputField
-                  label="Primary Skill"
-                  name="skill"
-                  value={formData.skill}
-                  onChange={handleChange}
-                />
-              )}
-              <InputField
-                label="Country"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-              />
-            </div>
-          )}
-          {step === 3 && (
-            <div className="animate-fadeIn">
-              <h2 className="text-2xl font-bold mb-6 text-gray-800">
-                Final Verification
-              </h2>
-              <InputField
-                label="Phone Number"
-                name="phoneNumber"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-              />
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-1">
-                  How did you hear about us?
-                </label>
-                <select
-                  name="source"
-                  value={formData.source}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-lg"
-                >
-                  <option value="">Select an option</option>
-                  <option value="google">Google Search</option>
-                  <option value="social">Social Media</option>
-                  <option value="friend">Word of Mouth</option>
-                </select>
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700 text-sm font-bold mb-1">
-                  ID Type
-                </label>
-                <select
-                  name="idType"
-                  value={formData.idType}
-                  onChange={handleChange}
-                  className="w-full px-3 py-2 border rounded-lg"
-                >
-                  <option value="">Select ID Type</option>
-                  <option value="passport">Passport</option>
-                  <option value="national_id">National ID</option>
-                </select>
-              </div>
-              <InputField
-                label="ID Number"
-                name="idNumber"
-                value={formData.idNumber}
-                onChange={handleChange}
-              />
-            </div>
-          )}
-          <div className="flex justify-between mt-8">
-            {step > 1 ? (
+
+        {/* Heading */}
+        <div className="text-center mb-wc-8">
+          <h1 className="text-wc-2xl font-wc-semibold text-wc-text-heading mb-wc-2">
+            Create your account
+          </h1>
+          <p className="text-wc-sm text-wc-text">
+            Join thousands of skilled people and job providers on WorkConnect.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-wc-6">
+          {error && <p className="text-sm text-red-500 ">{error}</p>}
+          {success && <p className="text-sm text-wc-primary ">{success}</p>}
+          <FormField
+            id="name"
+            name="name"
+            label="Full Name"
+            icon={faUser}
+            placeholder="Enter your full name"
+            value={formData.name}
+            onChange={handleChange("name")}
+            required
+          />
+
+          <FormField
+            id="email"
+            name="email"
+            type="email"
+            label="Email Address"
+            icon={faEnvelope}
+            placeholder="Enter your email address"
+            value={formData.email}
+            onChange={handleChange("email")}
+            required
+          />
+
+          <FormField
+            id="username"
+            name="username"
+            label="Username"
+            icon={faUser}
+            placeholder="Choose a username"
+            value={formData.username}
+            onChange={handleChange("username")}
+            required
+          />
+
+          <FormField
+            id="password"
+            name="password"
+            label="Password"
+            type={showPassword ? "text" : "password"}
+            icon={faLock}
+            placeholder="Create a password"
+            value={formData.password}
+            onChange={handleChange("password")}
+            required
+            rightElement={
               <button
                 type="button"
-                onClick={prevStep}
-                className="bg-green-700 text-white p-2 rounded"
+                onClick={() => setShowPassword((prev) => !prev)}
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                className="text-wc-text-muted hover:text-wc-text-heading transition-colors duration-wc-fast"
               >
-                Back
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
               </button>
-            ) : (
-              <div />
-            )}
-            {step < 3 && (
-              <button
-                type="button"
-                className="bg-green-700 text-white p-2 rounded"
-                onClick={nextStep}
-              >
-                Next
-              </button>
-            )}
-            {step === 3 && (
-              <button
-                type="submit"
-                className="bg-green-700 text-white p-2 rounded"
-              >
-                Register
-              </button>
-            )}
-          </div>
+            }
+          />
+          <FormField
+            id="role"
+            name="role"
+            label="I want to..."
+            as="select"
+            icon={faBriefcase}
+            options={ACCOUNT_TYPE_OPTIONS}
+            value={formData.role}
+            onChange={handleChange("role")}
+            required
+          />
+
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            icon={faArrowRight}
+            iconPosition="right"
+          >
+            Create Account
+          </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
-          Already registered?
-          <Link to="/login">
-            {" "}
-            <div className="text-green-600 font-semibold">Go to login</div>
-          </Link>
+        <div className="flex items-center gap-wc-3 my-wc-6">
+          <div className="flex-1 border-t border-wc-border" />
+          <span className="text-wc-sm text-wc-text-muted">or</span>
+          <div className="flex-1 border-t border-wc-border" />
         </div>
+
+        <Button
+          variant="secondary"
+          size="lg"
+          fullWidth
+          icon={faGoogle}
+          onClick={onGoogleClick}
+        >
+          Sign up with Google
+        </Button>
+
+        <p className="text-center text-wc-sm text-wc-text mt-wc-6">
+          Already have an account?{" "}
+          <button
+            type="button"
+            onClick={onLoginClick}
+            className="font-wc-medium text-wc-primary"
+          >
+            Log in
+          </button>
+        </p>
       </div>
     </div>
   );
-};
-
-export default Register;
+}

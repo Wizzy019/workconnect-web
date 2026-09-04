@@ -36,24 +36,37 @@ export const AuthProvider = ({ children }) => {
       password: formData.password,
     });
 
-    if (authError) throw authError;
+    if (authError) {
+      // console.log("AUTH ERROR:", authError);
+      throw authError;
+    }
 
     if (!data.user) {
       throw new Error("Check your email to confirm your account");
     }
+
     const { password, ...profileData } = formData;
 
-    const { error: profileError } = await supabase
+    console.log("PROFILE DATA:", profileData);
+
+    const { data: profile, error: profileError } = await supabase
       .from("workconnect_profiles")
       .insert({
         id: data.user.id,
         ...profileData,
-      });
+      })
+      .select()
+      .single();
 
-    if (profileError) throw profileError;
+    if (profileError) {
+      // console.log("PROFILE ERROR:", profileError);
+      throw profileError;
+    }
 
     setUser(data.user);
-    setProfile({ role: formData.role });
+    setProfile(profile);
+
+    return profile;
   };
 
   const login = async (email, password) => {

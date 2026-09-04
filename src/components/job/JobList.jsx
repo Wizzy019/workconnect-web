@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../../lib/supabaseClient/supabase";
-import OpportunityCard from "./OpportunityCard";
-
+import OpportunityCard from "../job/OpportunityCard";
 function JobList() {
   const [jobs, setJobs] = useState([]);
   const [fetchError, setFetchError] = useState("");
@@ -35,7 +34,7 @@ function JobList() {
       )}
       <div className="grid md:grid-cols-4 gap-4">
         {jobs.map((job) => (
-          <OpportunityCard
+          <opportunityC
             key={job.id}
             opportunity={job}
             variant="expanded"

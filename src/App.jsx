@@ -17,6 +17,7 @@ import Profile from "./pages/main/profile";
 import Settings from "./pages/main/Settings";
 import Wallet from "./pages/main/Wallet";
 import Messages from "./pages/main/Messages";
+// import Whatever from "./utils/Whatever";
 function App() {
   return (
     <Routes>

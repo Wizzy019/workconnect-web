@@ -5,7 +5,7 @@ import {
   faBars,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import Button from "../home/Button";
+import Button from "../common/Button";
 import { NavLink } from "react-router-dom";
 import { SmartNavLink } from "../common/SmartNavLink";
 
@@ -100,7 +100,7 @@ export default function Navbar({
             const isActive = link.path === activePath;
             return (
               <SmartNavLink
-                key={link.pSmartNavLinkth}
+                key={link.path}
                 to={link.path}
                 className={
                   isActive
